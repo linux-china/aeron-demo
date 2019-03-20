@@ -20,12 +20,12 @@ public class ReactorAeronAutoConfiguration {
     }
 
     @Bean
-    public AeronMessageHandler<String> aeronMessageHandler() {
+    public AeronBoundHandler<String> aeronMessageHandler() {
         return (inbound, outbound) -> s -> System.out.println(s);
     }
 
     @Bean
-    public OnDisposable aeronServer(@Autowired AeronResources aeronResources, AeronMessageHandler<String> messageHandler) {
+    public OnDisposable aeronServer(@Autowired AeronResources aeronResources, AeronBoundHandler<String> messageHandler) {
         //;
         OnDisposable server = AeronServer.create(aeronResources)
                 .options("localhost", 13000, 13001)
