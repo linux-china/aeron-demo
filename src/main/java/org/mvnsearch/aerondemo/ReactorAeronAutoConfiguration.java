@@ -14,7 +14,8 @@ import reactor.aeron.OnDisposable;
  */
 @Configuration
 public class ReactorAeronAutoConfiguration {
-    @Bean
+
+    @Bean(destroyMethod = "dispose")
     public AeronResources aeronResources() {
         return new AeronResources().useTmpDir().start().block();
     }
@@ -26,8 +27,7 @@ public class ReactorAeronAutoConfiguration {
 
     @Bean
     public OnDisposable aeronServer(@Autowired AeronResources aeronResources, AeronBoundHandler<String> messageHandler) {
-        //;
-        OnDisposable server = AeronServer.create(aeronResources)
+        return AeronServer.create(aeronResources)
                 .options("localhost", 13000, 13001)
                 .handle(aeronConnection -> aeronConnection
                         .inbound()
@@ -37,8 +37,5 @@ public class ReactorAeronAutoConfiguration {
                         .then(aeronConnection.onDispose()))
                 .bind()
                 .block();
-        //noinspection ConstantConditions
-        server.onDispose(aeronResources).onDispose().block();
-        return server;
     }
 }
