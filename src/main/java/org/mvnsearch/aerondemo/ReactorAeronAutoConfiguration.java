@@ -21,7 +21,7 @@ public class ReactorAeronAutoConfiguration {
 
     @Bean
     public AeronBoundHandler<String> aeronMessageHandler() {
-        return (aeronConnection, inbound, outbound) -> s -> System.out.println(s);
+        return (aeronConnection, inbound, outbound) -> message -> System.out.println(message);
     }
 
     @Bean
