@@ -22,10 +22,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <aeron.version>1.20.0</aeron.version>
+        <aeron.version>1.21.0</aeron.version>
         <reactor-aeron.version>0.1.5-SNAPSHOT</reactor-aeron.version>
-        <agrona.version>1.0.3</agrona.version>
-        <junit5.version>5.5.0</junit5.version>
+        <agrona.version>1.0.6</agrona.version>
+        <junit5.version>5.5.1</junit5.version>
     </properties>
 
     <dependencies>
