@@ -28,6 +28,7 @@ public class AeronClientTest {
     @AfterAll
     public void tearDown() {
         resources.dispose();
+        resources.onDispose().block();
     }
 
     @Test
