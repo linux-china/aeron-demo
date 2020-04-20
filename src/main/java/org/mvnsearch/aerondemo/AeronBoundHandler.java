@@ -1,6 +1,6 @@
 package org.mvnsearch.aerondemo;
 
-import reactor.aeron.AeronConnection;
+import reactor.aeron.AeronDuplex;
 import reactor.aeron.AeronInbound;
 import reactor.aeron.AeronOutbound;
 
@@ -21,5 +21,5 @@ public interface AeronBoundHandler<T> {
      * @param outbound        out bound
      * @return message handler
      */
-    Consumer<T> execute(AeronConnection aeronConnection, AeronInbound inbound, AeronOutbound outbound);
+    Consumer<T> execute(AeronDuplex aeronDuplex, AeronInbound inbound, AeronOutbound outbound);
 }
