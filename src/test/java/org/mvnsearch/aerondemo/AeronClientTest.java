@@ -1,14 +1,18 @@
 package org.mvnsearch.aerondemo;
 
+import org.agrona.DirectBuffer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import reactor.aeron.AeronClient;
-import reactor.aeron.AeronConnection;
-import reactor.aeron.AeronResources;
+import org.reactivestreams.Publisher;
+import reactor.aeron.AeronDuplex;
+import reactor.aeron.mdc.AeronClient;
+import reactor.aeron.mdc.AeronResources;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -28,23 +32,25 @@ public class AeronClientTest {
     @AfterAll
     public void tearDown() {
         resources.dispose();
-        resources.onDispose().block();
     }
 
     @Test
     public void testSend() throws Exception {
-        AeronConnection client = AeronClient.create(resources)
-                .options("localhost", 13000, 13001)
-                .handle(
-                        connection1 -> {
-                            System.out.println("Handler invoked");
-                            return connection1
-                                    .outbound()
-                                    .sendString(Flux.fromStream(Stream.of("Hello", "world!")).log("send"))
-                                    .then(connection1.onDispose());
-                        })
-                .connect()
-                .block();
+        AeronDuplex<DirectBuffer> client = createConnection(connection ->
+                connection.outbound()
+                        .sendString(Flux.fromStream(Stream.of("Hello", "world!")).log("send"))
+                        .onDispose(resources));
         Thread.sleep(1000);
+        client.dispose();
+        Thread.sleep(1000);
+    }
+
+    private AeronDuplex<DirectBuffer> createConnection(
+            Function<? super AeronDuplex<DirectBuffer>, ? extends Publisher<Void>> handler) {
+        return AeronClient.create(resources)
+                .options("localhost", 13000, 13001)
+                .handle(handler)
+                .connect()
+                .block(Duration.ofSeconds(10));
     }
 }
