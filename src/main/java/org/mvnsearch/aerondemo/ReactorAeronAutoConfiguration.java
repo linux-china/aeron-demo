@@ -3,9 +3,11 @@ package org.mvnsearch.aerondemo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import reactor.aeron.AeronResources;
-import reactor.aeron.AeronServer;
 import reactor.aeron.OnDisposable;
+import reactor.aeron.mdc.AeronResources;
+import reactor.aeron.mdc.AeronServer;
+
+import static reactor.aeron.DefaultFragmentMapper.asString;
 
 /**
  * reactor Aeron auto configuration
@@ -32,7 +34,7 @@ public class ReactorAeronAutoConfiguration {
                 .handle(aeronConnection -> aeronConnection
                         .inbound()
                         .receive()
-                        .asString()
+                        .map(asString())
                         .doOnNext(messageHandler.execute(aeronConnection, aeronConnection.inbound(), aeronConnection.outbound()))
                         .then(aeronConnection.onDispose()))
                 .bind()
