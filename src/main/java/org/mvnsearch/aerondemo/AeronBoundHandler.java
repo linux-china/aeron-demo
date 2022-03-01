@@ -21,5 +21,5 @@ public interface AeronBoundHandler<T> {
      * @param outbound        out bound
      * @return message handler
      */
-    Consumer<T> execute(AeronDuplex aeronDuplex, AeronInbound inbound, AeronOutbound outbound);
+    Consumer<T> execute(AeronDuplex<?> aeronDuplex, AeronInbound<?> inbound, AeronOutbound outbound);
 }
